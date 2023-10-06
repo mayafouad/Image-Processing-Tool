@@ -18,23 +18,17 @@ unsigned char new_image[SIZE][SIZE]; // that will save
 
 // open and save image:
 void Open_GS_Image(){
-
     char ImageFileName[100];
-
     cout << "Enter The Source Image File Name\n";// enter target file name
     cin >> ImageFileName;
-
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     readGSBMP(ImageFileName, image);
 }
 
 void Save_GS_Image(){
-
     char ImageFileName[100];
-
     cout << "Enter The Target Image File Name\n"; // enter target file name
     cin >> ImageFileName;
-
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     writeGSBMP(ImageFileName, new_image);
 }
@@ -42,70 +36,46 @@ void Save_GS_Image(){
 // ----- Gray Scale Bitmap Filters -----
 
 // 1. Black and White Image :
-
 void GS_Black_White(){
-
     Open_GS_Image();
-
     for (int i = 0; i < SIZE; i++) {
-
         for (int j = 0; j < SIZE; j++) {
-
             if (image[i][j] > 127)
                 new_image[i][j] = 255; // convert the greater than the average to a white pixel
-
             else 
                 new_image[i][j] = 0;    // convert the lower than the average to a black pixel  
         }
     }
-
     Save_GS_Image();
 }
 
 // 2. Invert Image :
-
 void GS_Invert(){
-
     Open_GS_Image();
-
     for (int i = 0; i < SIZE; i++){
-
         for (int j = 0; j < SIZE; j++)
             new_image[i][j] = 255 - image[i][j]; // turn every pixel to its opposite level of brightness
     }
-
     Save_GS_Image();
 }
 
 // 4. Flip Image Horizontally and Vertically :
-
 void GS_Flip (){
-
     Open_GS_Image();
-
     int n;
-
     cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
     cin >> n;
-
     if(n == 1){
-
         for (int i = 0; i < SIZE; i++) {
-
             for (int j = 0; j < SIZE; j++) {
-
                 new_image[i][j] = image[i][abs(SIZE-j)]; 
                 // convert the place of column 
             }
         }
     }
-
     else{
-
         for (int i = 0; i < SIZE; i++) {
-
             for (int j = 0; j < SIZE; j++) {
-
                 new_image[i][j] = image[abs(SIZE-i)][j]; 
                 // convert the place of row 
             }
@@ -116,255 +86,169 @@ void GS_Flip (){
 }
 
 // 6. Darken And Lighten Image :
-
 void GS_Darken_And_Lighten(){
-
     Open_GS_Image();
-
     char Choice;
-
     cout << "Do you want to (d)arken or (l)ighten ? ";
     cin >> Choice;
-
     for (int i = 0; i < SIZE; i++){
-
         for (int j = 0; j < SIZE; j++) {
-
             if(Choice == 'd')
                 new_image[i][j] = image[i][j] * 0.5; // darken the image by 50%.
-
             else if(Choice == 'l')
                 new_image[i][j] = (255 + image[i][j]) / 2; // lighten the image by 50%.
         }
     }
-
     Save_GS_Image();
 }
 
 // 7. Detect Image Edges :
-
 void GS_Edges(){
-
     Open_GS_Image();
- 
     unsigned char new_image2[SIZE][SIZE]; 
-
     // convert the image to Black and white
     for (int i = 0; i < SIZE; i++) {
-
         for (int j = 0; j < SIZE; j++) {
-
             if (image[i][j] > 127)
                 new_image2[i][j] = 255;
-
             else
                 new_image2[i][j] = 0;    
         }
     }
-
     for (int i = 0; i < SIZE; i++) {
-
         for (int j = 0; j < SIZE; j++) {
-
-            if(new_image2[i][j] == 0 && new_image2[i-1][j] == 0  
-            && new_image2[i+1][j] == 0 && new_image2[i][j-1] == 0 && 
-            new_image2[i][j+1] == 0){
-
+            if(new_image2[i][j] == 0 && new_image2[i-1][j] == 0  && new_image2[i+1][j] == 0 && new_image2[i][j-1] == 0 && new_image2[i][j+1] == 0){
                 new_image[i][j] = 255;
             }
             else if(new_image2[i][j] == 0 ) 
                 new_image[i][j] = 0;
-
             else 
                 new_image[i][j] = 255;
         }
     }
-
     Save_GS_Image();
 }
 
 // 10. Mirror :
-
 void GS_Mirror(){
-
     Open_GS_Image();
-
     cout << "Enter The Number Of Part\n";
     cout << "(1) Left\n";
     cout << "(2) Right\n";
     cout << "(3) Upper\n";
     cout << "(4) Lower\n";
-
     int n;
     cin >> n;
-
     if(n == 1){
-
         for(int i = 0; i < SIZE; i++){
-
             for(int j = 0; j <= SIZE/2; j++){ // loop over the left part 
-
                 new_image[i][j] = image[i][j]; 
                 new_image[i][SIZE-j] = image[i][j]; // make the most right = the left
             }
         }
     }
     else if(n == 2){
-
         for(int i = 0; i < SIZE; i++){
-
             for(int j = SIZE/2; j < SIZE; j++){ // loop over the right part 
-
                 new_image[i][SIZE-j] = image[i][j]; // make  the left = the right 
                 new_image[i][j] = image[i][j];
             }
         }
     }
     else if(n == 3){
-
         for(int i = 0; i <= SIZE/2; i++){ // loop over the upper part 
-
             for(int j = 0; j < SIZE; j++){
-
                 new_image[i][j] = image[i][j];
                 new_image[SIZE-i][j] = image[i][j]; // make the most down = the upper
             }
         }
     }
     else {
-
         for(int i = SIZE/2; i < SIZE ; i++){ // loop over the lower part 
-
             for(int j = 0; j < SIZE; j++){
-
                 new_image[SIZE-i][j] = image[i][j]; // make the upper= the dowen  
                 new_image[i][j] = image[i][j];
             }
         }
     }
-
     Save_GS_Image();
 }
 
 // 13. Crop Image :
-
 void GS_Crop(){
-
     Open_GS_Image();
-
-    cout << "Enter The Position You Want\n";
-
-    int x, y;
-    cin >> x >> y;
-
-    // width = size - 2*x , length = size - 2*y 
-    for(int i = min(SIZE - x, x); i < max(SIZE - x, x); i++){ // loop from 
-
-        for(int j = min(SIZE - y, y); j < max(SIZE - y, y); j++)
+    cout << "Enter The Starting Position\n";
+    int x, y; cin >> x >> y;
+    cout << "Enter Width And Length\n";
+    int w, l; cin >> w >> l;
+    for(int i = y; i < y+l; i++){ //start row = y, end row = l+y. looping over l rows make the length.
+        for(int j = x; j < x+w; j++){//start column = x, end column = x+w. looping over w columns make the width.
             new_image[i][j] = image[i][j];
-        
+        }
     }
-
     Save_GS_Image();
 }
 
 char Choice;
 void DoProcess(){
-
     cout << "Please select a filter to apply or 0 to exit : ";
     cin >> Choice;
 
     switch(Choice){
-         
         case('1'):
-
             GS_Black_White();
-            break;
-            
+            break; 
         case('2'):
-
             GS_Invert();
             break;
-
         case('3'):
-
             cout << 3;
             break;
-
         case('4'):
-
             GS_Flip();
             break;
-
         case('5'):
-
             GS_Darken_And_Lighten();
             break;
-
         case('6'):
-
             cout << 6;
             break;
-
         case('7'):
-
             GS_Edges();
             break;
-
         case('8'):
-
             cout << 8;
             break;
-
         case('9'):
-
             cout << 9;
             break;
-
         case('a'):
-
             GS_Mirror();
             break;
-
         case('b'):
-
             cout << 11;
             break;
-
         case('c'):
-
             cout << 12;
             break;
-
         case('d'):
-
             GS_Crop();
             break;
-
         case('e'):
-
             cout << 14;
             break;
-
         case('f'):
-
             cout << 15;
             break;
-
         case('s'):
-
             cout << 16;
             break;
-        
         case('0'):
-
-            cout << 0;
             break;
     }
 }
 
 // view all filters:
-
 void view(){
 
     cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n";  
@@ -393,6 +277,5 @@ int main (){
 
     while(Choice != '0')
         view (); 
-    
-    
+       
 }
