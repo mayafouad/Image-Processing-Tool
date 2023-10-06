@@ -126,7 +126,7 @@ void GS_Mirror(){
     else {
         for(int i = SIZE/2; i < SIZE ; i++){ // loop over the lower part 
             for(int j = 0; j < SIZE; j++){
-                new_image[SIZE-i][j] = image[i][j]; // make the upper= the dowen  
+                new_image[SIZE-i][j] = image[i][j]; // make the upper = the dowen  
                 new_image[i][j] = image[i][j];
             }
         }
@@ -136,11 +136,12 @@ void GS_Mirror(){
 // 13. Crop Image :
 void GS_Crop(){
     Open_GS_Image();
-    cout << "Enter The Position You Want\n";
+    cout << "Enter The Starting Position\n";
     int x, y; cin >> x >> y;
-    // width = size - 2*x , length = size - 2*y 
-    for(int i = min(SIZE-x, x); i < max(SIZE-x, x); i++){ // loop from 
-        for(int j = min(SIZE-y, y); j < max(SIZE-y, y); j++){
+    cout << "Enter Width And Length\n";
+    int w, l; cin >> w >> l;
+    for(int i = y; i < y+l; i++){ //start row = y, end row = l+y. looping over l rows make the length.
+        for(int j = x; j < x+w; j++){//start column = x, end column = x+w. looping over w columns make the width.
             new_image[i][j] = image[i][j];
         }
     }
