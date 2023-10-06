@@ -19,7 +19,7 @@ unsigned char new_image[SIZE][SIZE]; // that will save
 // open and save image:
 void Open_GS_Image(){
     char ImageFileName[100];
-    cout << "Enter The Source Image File Name\n";// enter target file name
+    cout << "\nEnter The Source Image File Name\n";// enter target file name
     cin >> ImageFileName;
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     readGSBMP(ImageFileName, image);
@@ -27,7 +27,7 @@ void Open_GS_Image(){
 
 void Save_GS_Image(){
     char ImageFileName[100];
-    cout << "Enter The Target Image File Name\n"; // enter target file name
+    cout << "\nEnter The Target Image File Name\n"; // enter target file name
     cin >> ImageFileName;
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     writeGSBMP(ImageFileName, new_image);
@@ -63,7 +63,7 @@ void GS_Invert(){
 void GS_Flip (){
     Open_GS_Image();
     int n;
-    cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
+    cout << "\nTo Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
     cin >> n;
     if(n == 1){
         for (int i = 0; i < SIZE; i++) {
@@ -89,7 +89,7 @@ void GS_Flip (){
 void GS_Darken_And_Lighten(){
     Open_GS_Image();
     char Choice;
-    cout << "Do you want to (d)arken or (l)ighten ? ";
+    cout << "\nDo you want to (d)arken or (l)ighten ? \n";
     cin >> Choice;
     for (int i = 0; i < SIZE; i++){
         for (int j = 0; j < SIZE; j++) {
@@ -129,10 +129,68 @@ void GS_Edges(){
     Save_GS_Image();
 }
 
-// 10. Mirror :
+// 8. Enlarge Image :
+void GS_Enlarge(){
+    Open_GS_Image();
+    short Quarter;
+    cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
+    cin >> Quarter;
+    switch(Quarter){
+
+        case 1:
+            for (int i = 0; i < SIZE / 2; i++){
+                for (int j = 0; j < SIZE / 2; j++) {
+                    // every part of the new image takes 4 bits.
+                    new_image[i * 2][j * 2] = image[i][j]; 
+                    new_image[(i * 2) + 1][j * 2] = image[i][j];
+                    new_image[i * 2][(j * 2) + 1] = image[i][j];
+                    new_image[(i * 2) + 1][(j * 2) + 1] = image[i][j];
+                }
+            }
+            break;
+    
+        case 2:
+            for (int i = 0; i < SIZE / 2; i++){
+                for (int j = 0; j < SIZE / 2; j++) {
+                    new_image[i * 2][j * 2] = image[i][SIZE/2 + j]; // (size / 2 + j) to reach second quarter
+                    new_image[(i * 2) + 1][j * 2] = image[i][SIZE/2 + j];
+                    new_image[i * 2][(j * 2) + 1] = image[i][SIZE/2 + j];
+                    new_image[(i * 2) + 1][(j * 2) + 1] = image[i][SIZE/2 + j];
+                }
+            }
+            break;
+        
+        case 3:
+            for (int i = 0; i < SIZE / 2; i++){
+                for (int j = 0; j < SIZE / 2; j++) {
+                    // (size / 2 + i) to reach third quarter
+                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][j];
+                    new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][j];
+                    new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][j];
+                    new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][j];
+                }
+            }
+            break;
+
+        case 4:
+            for (int i = 0; i < SIZE / 2; i++){
+                for (int j = 0; j < SIZE / 2; j++) {
+                    // (size / 2 + i) and (size / 2 + j) to reach fourth quarter
+                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][SIZE/2 + j];
+                    new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][SIZE/2 + j];
+                    new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
+                    new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
+                }
+            }
+            break;
+    }
+    Save_GS_Image();
+}
+
+// a. Mirror :
 void GS_Mirror(){
     Open_GS_Image();
-    cout << "Enter The Number Of Part\n";
+    cout << "\nEnter The Number Of Part\n";
     cout << "(1) Left\n";
     cout << "(2) Right\n";
     cout << "(3) Upper\n";
@@ -174,13 +232,86 @@ void GS_Mirror(){
     Save_GS_Image();
 }
 
-// 13. Crop Image :
+// b. Shuffle Image :
+void GS_Shuffle(){
+    Open_GS_Image();
+    int arr[4];
+    cout << "\nNew order of quarters ? \n";
+    cin >> arr[0] >> arr[1] >> arr[2] >> arr[3];
+
+    for(int i = 0; i < SIZE / 2; i++){
+        for(int j = 0; j < SIZE / 2; j++){
+
+            switch(arr[0]){ // first quarter of the new image.
+                case 1: // equal it with first quarter of the orignal image.
+                    new_image[i][j] = image[i][j]; 
+                    break;
+                case 2: // equal it with second quarter of the orignal image.     
+                    new_image[i][j] = image[i][SIZE /2 + j];
+                    break;
+                case 3: // equal it with third quarter of the orignal image.
+                    new_image[i][j] = image[SIZE / 2 + i][j];
+                    break;
+                case 4: // equal it with fourth quarter of the orignal image.
+                    new_image[i][j] = image[SIZE / 2 + i][SIZE /2 + j];
+                    break;
+                }
+            switch(arr[1]){ // second quarter of the new image.
+                case 1:
+                    new_image[i][SIZE / 2 + j] = image[i][j];
+                    break;
+                case 2:                        
+                    new_image[i][SIZE / 2 + j] = image[i][SIZE /2 + j];
+                    break;
+                case 3:
+                    new_image[i][SIZE / 2 + j] = image[SIZE / 2 + i][j];
+                    break;
+                case 4:
+                    new_image[i][SIZE / 2 + j] = image[SIZE / 2 + i][SIZE /2 + j];
+                    break;
+                }
+            switch(arr[2]){ // third quarter of the new image.
+                case 1:
+                    new_image[SIZE / 2 + i][j] = image[i][j];
+                    break;                    
+                case 2:                        
+                    new_image[SIZE / 2 + i][j] = image[i][SIZE /2 + j];
+                    break;
+                case 3:
+                    new_image[SIZE / 2 + i][j] = image[SIZE / 2 + i][j];
+                    break;
+                case 4:
+                    new_image[SIZE / 2 + i][j] = image[SIZE / 2 + i][SIZE /2 + j];
+                    break;
+                }
+            switch(arr[3]){ // fourth quarter of the new image.
+                case 1:
+                    new_image[SIZE / 2 + i][SIZE /2 + j] = image[i][j];
+                    break;                    
+                case 2:                        
+                    new_image[SIZE / 2 + i][SIZE /2 + j] = image[i][SIZE /2 + j];
+                    break;
+                case 3:
+                    new_image[SIZE / 2 + i][SIZE /2 + j] = image[SIZE / 2 + i][j];
+                    break;
+                case 4:
+                    new_image[SIZE / 2 + i][SIZE /2 + j] = image[SIZE / 2 + i][SIZE /2 + j];
+                    break;
+                }
+            }
+        }
+    Save_GS_Image();
+}
+
+// d. Crop Image :
 void GS_Crop(){
     Open_GS_Image();
-    cout << "Enter The Starting Position\n";
-    int x, y; cin >> x >> y;
-    cout << "Enter Width And Length\n";
-    int w, l; cin >> w >> l;
+    cout << "\nEnter The Starting Position\n";
+    int x, y; 
+    cin >> x >> y;
+    cout << "\nEnter Width And Length\n";
+    int w, l; 
+    cin >> w >> l;
     for(int i = y; i < y+l; i++){ //start row = y, end row = l+y. looping over l rows make the length.
         for(int j = x; j < x+w; j++){//start column = x, end column = x+w. looping over w columns make the width.
             new_image[i][j] = image[i][j];
@@ -191,7 +322,7 @@ void GS_Crop(){
 
 char Choice = '1';
 void DoProcess(){
-    cout << "Please select a filter to apply or 0 to exit : ";
+    cout << "\nPlease select a filter to apply or 0 to exit : \n";
     cin >> Choice;
 
     switch(Choice){
@@ -217,7 +348,7 @@ void DoProcess(){
             GS_Edges();
             break;
         case('8'):
-            cout << 8;
+            GS_Enlarge();
             break;
         case('9'):
             cout << 9;
@@ -226,7 +357,7 @@ void DoProcess(){
             GS_Mirror();
             break;
         case('b'):
-            cout << 11;
+            GS_Shuffle();
             break;
         case('c'):
             cout << 12;
@@ -248,7 +379,7 @@ void DoProcess(){
 // view all filters:
 void view(){
 
-    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n";  
+    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n\n";  
     cout << "1- Black & White Filter\n";
     cout << "2- Invert Filter\n";
     cout << "3- Merge Filter \n";
