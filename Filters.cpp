@@ -1,9 +1,11 @@
 /*
-    -----   CS213 - 2023 - Assignment 1 - Part 1 .    -----
+    ------   CS213 - 2023 - Assignment 1 - Part 1 .    ------
 
     Maya Fouad Fathy    20220270    mayafouad2004@gmail.com
 
-    Anas Abdelnasser Ibrahim    20220071    Elessilyanas@gmail.com
+    Anas Abdelnasser    20220071    Elessilyanas@gmail.com
+
+    Menna Abdelkarim    20210607    mannaabdelkarim@gmail.com
 
 */
 
@@ -33,7 +35,7 @@ void Save_GS_Image(){
 // ----- Gray Scale Bitmap Filters -----
 
 // 1. Black and White Image :
-void Black_GS_White(){
+void GS_Black_White(){
     Open_GS_Image();
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -44,7 +46,7 @@ void Black_GS_White(){
     Save_GS_Image();
 }
 // 4. Flip Image Horizontally and Vertically :
-void Flip (){
+void GS_Flip (){
     Open_GS_Image();
     cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
     int n; cin >> n;
@@ -67,7 +69,7 @@ void Flip (){
     Save_GS_Image();
 }
 // 7. Detect Image Edges :
-void Edges(){
+void GS_Edges(){
     Open_GS_Image();
     // convert the image to Black and white 
     unsigned char new_image2[SIZE][SIZE]; 
@@ -88,36 +90,99 @@ void Edges(){
     }
     Save_GS_Image();
 }
+// 10. Mirror :
+void GS_Mirror(){
+    Open_GS_Image();
+    cout << "Enter The Number Of Part\n";
+    cout << "(1) Left\n";
+    cout << "(2) Right\n";
+    cout << "(3) Upper\n";
+    cout << "(4) Lower\n";
+    int n; cin >> n;
+    if(n == 1){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j <= SIZE/2; j++){ // loop over the left part 
+                new_image[i][j] = image[i][j]; 
+                new_image[i][SIZE-j] = image[i][j]; // make the most right = the left
+            }
+        }
+    }
+    else if(n == 2){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = SIZE/2; j < SIZE; j++){ // loop over the right part 
+                new_image[i][SIZE-j] = image[i][j]; // make  the left = the right 
+                new_image[i][j] = image[i][j];
+            }
+        }
+    }
+    else if(n == 3){
+        for(int i = 0; i <= SIZE/2; i++){ // loop over the upper part 
+            for(int j = 0; j < SIZE; j++){
+                new_image[i][j] = image[i][j];
+                new_image[SIZE-i][j] = image[i][j]; // make the most down = the upper
+            }
+        }
+    }
+    else {
+        for(int i = SIZE/2; i < SIZE ; i++){ // loop over the lower part 
+            for(int j = 0; j < SIZE; j++){
+                new_image[SIZE-i][j] = image[i][j]; // make the upper= the dowen  
+                new_image[i][j] = image[i][j];
+            }
+        }
+    }
+    Save_GS_Image();
+}
+// 13. Crop Image :
+void GS_Crop(){
+    Open_GS_Image();
+    cout << "Enter The Position You Want\n";
+    int x, y; cin >> x >> y;
+    // width = size - 2*x , length = size - 2*y 
+    for(int i = min(SIZE-x, x); i < max(SIZE-x, x); i++){ // loop from 
+        for(int j = min(SIZE-y, y); j < max(SIZE-y, y); j++){
+            new_image[i][j] = image[i][j];
+        }
+    }
+    Save_GS_Image();
+}
 // view all filters:
+int number = 1;
 void view (){
-    cout << "Filters :\n"; 
+    cout << "Welcome To Our Image Processing Tool, There Are Many Filters :\n";  
     cout << "1: Black and White Image\n"; 
     cout << "2: Invert Image\n"; 
     cout << "3: Merge Images\n"; 
-    cout << "4: Black and White Image\n"; 
+    cout << "4: Flip Image\n"; 
     cout << "5: Black and White Image\n"; 
     cout << "6: Black and White Image\n"; 
     cout << "7: Detect Image Edges\n"; 
     cout << "8: Black and White Image\n"; 
     cout << "9: Black and White Image\n"; 
-    cout << "10: Black and White Image\n"; 
+    cout << "10: Mirror Image\n"; 
     cout << "11: Black and White Image\n"; 
     cout << "12: Black and White Image\n"; 
-    cout << "13: Black and White Image\n"; 
+    cout << "13: Crop Image\n"; 
     cout << "14: Black and White Image\n"; 
     cout << "15: Black and White Image\n"; 
-    cout << "Enter The Number Of Filter\n"; 
-    int n; cin >> n;
-    switch (n)
+    cout << "Enter The Number Of Filter, Or To Exist Press Zero.\n";
+    cin >> number;
+    switch (number)
     {
     case 1:{
-        Black_GS_White();
+        GS_Black_White();
         break;}
-    case 2:{
-        Flip ();
+    case 4:{
+        GS_Flip ();
         break;}
     case 7:{
-        Edges ();
+        GS_Edges ();
+        break;}  
+    case 10:{
+        GS_Mirror ();
+        break;} 
+    case 13:{
+        GS_Crop ();
         break;}    
     default:
         break;
@@ -125,5 +190,9 @@ void view (){
 }
 
 int main (){
-    view ();
+
+    while(number != 0){
+        view (); 
+    }
+    
 }
