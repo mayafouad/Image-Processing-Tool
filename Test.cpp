@@ -189,7 +189,7 @@ void GS_Crop(){
     Save_GS_Image();
 }
 
-char Choice;
+char Choice = '1';
 void DoProcess(){
     cout << "Please select a filter to apply or 0 to exit : ";
     cin >> Choice;
