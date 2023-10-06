@@ -240,9 +240,6 @@ void DoProcess(){
         case('f'):
             cout << 15;
             break;
-        case('s'):
-            cout << 16;
-            break;
         case('0'):
             break;
     }
@@ -267,7 +264,6 @@ void view(){
     cout << "d- Crop Image\n";
     cout << "e- Skew Image Right  \n";
     cout << "f- Skew Image Up  \n";
-    cout << "s- Save the image to a file\n";
     cout << "0- Exit\n";
 
     DoProcess();
