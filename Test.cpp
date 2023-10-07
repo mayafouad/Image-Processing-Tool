@@ -135,54 +135,36 @@ void GS_Enlarge(){
     short Quarter;
     cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
     cin >> Quarter;
-    switch(Quarter){
-
-        case 1:
-            for (int i = 0; i < SIZE / 2; i++){
-                for (int j = 0; j < SIZE / 2; j++) {
+    for (int i = 0; i < SIZE / 2; i++){
+        for (int j = 0; j < SIZE / 2; j++) {
+            switch(Quarter){
+                case 1:
                     // every part of the new image takes 4 bits.
                     new_image[i * 2][j * 2] = image[i][j]; 
                     new_image[(i * 2) + 1][j * 2] = image[i][j];
                     new_image[i * 2][(j * 2) + 1] = image[i][j];
                     new_image[(i * 2) + 1][(j * 2) + 1] = image[i][j];
-                }
-            }
-            break;
-    
-        case 2:
-            for (int i = 0; i < SIZE / 2; i++){
-                for (int j = 0; j < SIZE / 2; j++) {
+                    break;
+                case 2:
                     new_image[i * 2][j * 2] = image[i][SIZE/2 + j]; // (size / 2 + j) to reach second quarter
                     new_image[(i * 2) + 1][j * 2] = image[i][SIZE/2 + j];
                     new_image[i * 2][(j * 2) + 1] = image[i][SIZE/2 + j];
                     new_image[(i * 2) + 1][(j * 2) + 1] = image[i][SIZE/2 + j];
-                }
-            }
-            break;
-        
-        case 3:
-            for (int i = 0; i < SIZE / 2; i++){
-                for (int j = 0; j < SIZE / 2; j++) {
-                    // (size / 2 + i) to reach third quarter
-                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][j];
+                    break;
+                case 3:
+                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][j]; // (size / 2 + i) to reach third quarter
                     new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][j];
                     new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][j];
                     new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][j];
-                }
-            }
-            break;
-
-        case 4:
-            for (int i = 0; i < SIZE / 2; i++){
-                for (int j = 0; j < SIZE / 2; j++) {
-                    // (size / 2 + i) and (size / 2 + j) to reach fourth quarter
-                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][SIZE/2 + j];
+                    break;
+                case 4:
+                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][SIZE/2 + j]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter
                     new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][SIZE/2 + j];
                     new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
                     new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
-                }
+                    break;
             }
-            break;
+        }
     }
     Save_GS_Image();
 }
