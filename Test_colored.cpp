@@ -105,3 +105,90 @@ void RGB_Edges(){
     }
     Save_GS_Image();
 }
+
+char Choice = '1';
+void DoProcess(){
+    cout << "\nPlease select a filter to apply or 0 to exit : \n";
+    cin >> Choice;
+
+    switch(Choice){
+        case('1'):
+            RGB_Black_White();
+            break; 
+        case('2'):
+         //   GS_Invert();
+            break;
+        case('3'):
+            //GS_Merge();
+            break;
+        case('4'):
+            RGB_Flip();
+            break;
+        case('5'):
+       //     GS_Darken_And_Lighten();
+            break;
+        case('6'):
+        //    GS_Rotate();
+            break;
+        case('7'):
+            RGB_Edges();
+            break;
+        case('8'):
+        //    GS_Enlarge();
+            break;
+        case('9'):
+            cout << 9;
+            break;
+        case('a'):
+          //  GS_Mirror();
+            break;
+        case('b'):
+         //   GS_Shuffle();
+            break;
+        case('c'):
+            cout << 12;
+            break;
+        case('d'):
+        //    GS_Crop();
+            break;
+        case('e'):
+            cout << 14;
+            break;
+        case('f'):
+            cout << 15;
+            break;
+        case('0'):
+            break;
+    }
+}
+
+// view all filters:
+void view(){
+
+    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n\n";  
+    cout << "1- Black & White Filter\n";
+    cout << "2- Invert Filter\n";
+    cout << "3- Merge Filter \n";
+    cout << "4- Flip Image\n";
+    cout << "5- Darken and Lighten Image \n";
+    cout << "6- Rotate Image\n";
+    cout << "7- Detect Image Edges \n";
+    cout << "8- Enlarge Image\n";
+    cout << "9- Shrink Image\n";
+    cout << "a- Mirror 1/2 Image\n";
+    cout << "b- Shuffle Image\n";
+    cout << "c- Blur Image\n";
+    cout << "d- Crop Image\n";
+    cout << "e- Skew Image Right  \n";
+    cout << "f- Skew Image Up  \n";
+    cout << "0- Exit\n";
+
+    DoProcess();
+}
+
+int main (){
+
+    while(Choice != '0')
+        view (); 
+       
+}
