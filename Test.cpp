@@ -59,6 +59,30 @@ void GS_Invert(){
     Save_GS_Image();
 }
 
+// 3. Merge Images:
+void GS_Merge(){
+    Open_GS_Image();
+    unsigned char image2[SIZE][SIZE];         // declare the images we need .
+    unsigned char image3 [SIZE][SIZE];
+    char mergeImageFileName[100];            // load second Image.
+    cout << "\nEnter the source image2 file name :\n";
+    cin >> mergeImageFileName;
+    strcat (mergeImageFileName, ".bmp");     // add ".bmp" to second image .
+    readGSBMP (mergeImageFileName, image2);  // and load it .
+
+    for (int i = 0; i < SIZE; i++) {         // merge two photos .
+        for (int j = 0; j < SIZE; j++) {
+            image3[i][j] = (image[i][j] + image2[i][j]) / 2;
+        }
+    }
+    for (int i =0 ;i<SIZE;i++){               // put the new image in the original image .
+        for (int j=0 ; j< SIZE;j++){
+            new_image[i][j]=image3[i][j];
+        }
+    }
+    Save_GS_Image();
+}
+
 // 4. Flip Image Horizontally and Vertically :
 void GS_Flip (){
     Open_GS_Image();
