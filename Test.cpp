@@ -109,7 +109,7 @@ void GS_Flip (){
     Save_GS_Image();
 }
 
-// 6. Darken And Lighten Image :
+// 5. Darken And Lighten Image :
 void GS_Darken_And_Lighten(){
     Open_GS_Image();
     char Choice;
@@ -121,6 +121,41 @@ void GS_Darken_And_Lighten(){
                 new_image[i][j] = image[i][j] * 0.5; // darken the image by 50%.
             else if(Choice == 'l')
                 new_image[i][j] = (255 + image[i][j]) / 2; // lighten the image by 50%.
+        }
+    }
+    Save_GS_Image();
+}
+
+//6. Rotate Image :
+void GS_Rotate(){
+    Open_GS_Image();
+    int rot_Choice = 1 ;
+    cout << "\n\tSelect 1 for 90 degree rotation\n"
+            "\tSelect 2 for 180 degree rotation\n"
+            "\tSelect 3 for 270 degree rotation\n";
+    cin >> rot_Choice;                         // user input of the rotation choice menu .
+
+    while (rot_Choice < 1 || rot_Choice > 3){
+
+        cout << "\nInvalid input, please re-enter a valid one :\n";
+        cin >> rot_Choice;            // if the user input not valid ;re-load rotation choice menu +.
+    }
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            switch(rot_Choice) {
+                case 1 :                          // 90 degree rotation .
+                    new_image[i][j] = image[SIZE - 1 - j][i];
+                    break;
+                case 2 :                           // 180 degree rotation .
+                    new_image[i][j] = image[SIZE - 1 - i][SIZE - 1 - j];
+                    break ;
+                case 3 :                          // 270 degree rotation .
+                     new_image[i][j] = image[j][SIZE - 1 - i] ;
+                    break;
+                default :
+                    break;
+            }
         }
     }
     Save_GS_Image();
@@ -339,7 +374,7 @@ void DoProcess(){
             GS_Invert();
             break;
         case('3'):
-            cout << 3;
+            GS_Merge();
             break;
         case('4'):
             GS_Flip();
@@ -348,7 +383,7 @@ void DoProcess(){
             GS_Darken_And_Lighten();
             break;
         case('6'):
-            cout << 6;
+            GS_Rotate();
             break;
         case('7'):
             GS_Edges();
