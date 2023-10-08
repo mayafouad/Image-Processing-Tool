@@ -94,6 +94,71 @@ void GS_Rotate(){
     Save_GS_Image();
 }
 
+//9.shrink image
+void GS_Shrink () {
+     Open_GS_Image();
+     unsigned char image2[SIZE][SIZE];
+    int choice ;                    // read the user choice .
+    cout <<"\tfor 1/2 shrink photo select 1: \n";
+    cout <<"\tfor 1/3 shrink photo select 2:\n";
+    cout <<"\tfor 1/4 shrink photo select 3: \n";
+    cin >> choice;
+    for (int i = 0; i < SIZE; ++i) {       //make all pixels in image2
+        for (int j = 0; j < SIZE; ++j) {  // array are white 255 .
+            image2[i][j]=255;
+        }
+    }
+    if (choice == 1){                   // 1/2 shrink photo .
+        for (int i = 0; i < SIZE; i+=2) {
+            for (int j = 0; j < SIZE; j+=2) {
+                image2[i / 2][j / 2] = image[i][j];
+            }
+        }
+
+    }
+    else if (choice == 2){             // 1/3 shrink photo .
+        for (int i = 0; i < SIZE; i+=3) {
+            for (int j = 0; j < SIZE; j+=3) {
+                image2[i / 3][j / 3] = image[i][j];
+            }
+        }
+
+    }
+    else if (choice == 3){            // 1/4 shrink photo .
+        for (int i = 0; i < SIZE; i+=4) {
+            for (int j = 0; j < SIZE; j+=4) {
+                image2[i / 4][j /4 ] = image[i][j];
+            }
+        }
+
+    }
+    for (int i =0 ;i<SIZE;i++){   //save the new photo.
+        for (int j=0 ; j< SIZE;j++)
+           new_image[i][j]=image2[i][j];
+        }
+        Save_GS_Image();
+    }
+
+
+//c.blur image
+void GS_Blur () {
+    Open_GS_Image();
+    long long avg=0;   // declare a variable to store the sum .
+    for (int i = 0; i < SIZE; i++) {  //rows for loop.
+        for (int j = 0; j < SIZE; j++) { // columns for loop .
+            for (int k = i; k < i+7; k++) {
+                for (int l = j; l < j+7; l++) { // iterate every 7*7 pixels .
+                    avg+=(image[k][l]);
+                }
+            }
+            avg=avg/49;    // calculate the average " sum /49" .
+           new_image[i][j]=avg;
+            avg=0;
+        }
+    }
+    Save_GS_Image();
+}
+
 // view all filters:
 int number = 1;
 void view (){
@@ -106,7 +171,7 @@ void view (){
     cout << "6: rotate image filter\n";
     cout << "7: Detect Image Edges\n";
     cout << "8: Black and White Image\n";
-    cout << "9: Black and White Image\n";
+    cout << "9: shrink image filter\n";
     cout << "10: Mirror Image\n";
     cout << "11: Black and White Image\n";
     cout << "12: Black and White Image\n";
@@ -125,9 +190,18 @@ void view (){
          GS_Rotate();;
              break;
         }
+     case (9):{
+         GS_Shrink();
+            break;
+     } 
+    case (c):{
+         GS_Blur();
+            break;
+     }
+        
     }
 
-}
+
 
 int main (){
 
