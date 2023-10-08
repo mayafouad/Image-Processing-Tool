@@ -160,3 +160,54 @@ void GS_Rotate(){
     }
     Save_GS_Image();
 }
+
+char Choice = '1';
+void DoProcess(){
+    cout << "\nPlease select a filter to apply or 0 to exit : \n";
+    cin >> Choice;
+
+    switch(Choice){
+        case('1'):
+            GS_Black_White();
+            break; 
+        case('2'):
+            GS_Invert();
+            break;
+        case('3'):
+            GS_Merge();
+            break;
+        case('4'):
+            GS_Flip();
+            break;
+        case('5'):
+            GS_Darken_And_Lighten();
+            break;
+        case('6'):
+            GS_Rotate();
+            break;
+        case('0'):
+            break;
+    }
+}
+
+// view all filters:
+void view(){
+
+    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n\n";  
+    cout << "1- Black & White Filter\n";
+    cout << "2- Invert Filter\n";
+    cout << "3- Merge Filter \n";
+    cout << "4- Flip Image\n";
+    cout << "5- Darken and Lighten Image \n";
+    cout << "6- Rotate Image\n";
+    cout << "0- Exit\n";
+
+    DoProcess();
+}
+
+int main (){
+
+    while(Choice != '0')
+        view (); 
+       
+}
