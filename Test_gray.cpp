@@ -5,7 +5,7 @@
 
     Anas Abdelnasser    20220071    Elessilyanas@gmail.com
 
-    Menna Abdelkarim    20210607    mannaabdelkarim0@gmail.com
+    Menna Abdelkarim    20210607    mannaabdelkarim@gmail.com
 
 */
 
@@ -31,6 +31,32 @@ void Save_GS_Image(){
     cin >> ImageFileName;
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     writeGSBMP(ImageFileName, new_image);
+}
+
+bool IsNumberBetween(int Number, int From, int To){
+	if (Number >= From && Number <= To)
+		return true;
+	else
+		return false;
+}
+
+int ReadIntNumber(string ErrorMessage = "\nInvalid Input, Enter again :\n"){
+	int Number;
+	while (!(cin >> Number)){
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << ErrorMessage;
+	}
+	return Number;
+}
+
+int ReadIntNumberBetween(int From, int To, string ErrorMessage = "\nInvalid Input, Enter again :\n"){
+	int Number = ReadIntNumber();
+	while (!IsNumberBetween(Number, From, To)){
+		cout << ErrorMessage;
+		Number = ReadIntNumber();
+	}
+	return Number;
 }
 
 // ----- Gray Scale Bitmap Filters -----
@@ -63,22 +89,15 @@ void GS_Invert(){
 void GS_Merge(){
     Open_GS_Image();
     unsigned char image2[SIZE][SIZE];         // declare the images we need .
-    unsigned char image3 [SIZE][SIZE];
     char mergeImageFileName[100];            // load second Image.
-    cout << "\nEnter the source image2 file name :\n";
+    cout << "\nPlease enter name of image file to merge with :\n";
     cin >> mergeImageFileName;
     strcat (mergeImageFileName, ".bmp");     // add ".bmp" to second image .
     readGSBMP (mergeImageFileName, image2);  // and load it .
 
     for (int i = 0; i < SIZE; i++) {         // merge two photos .
-        for (int j = 0; j < SIZE; j++) {
-            image3[i][j] = (image[i][j] + image2[i][j]) / 2;
-        }
-    }
-    for (int i =0 ;i<SIZE;i++){               // put the new image in the original image .
-        for (int j=0 ; j< SIZE;j++){
-            new_image[i][j]=image3[i][j];
-        }
+        for (int j = 0; j < SIZE; j++) 
+            new_image[i][j] = (image[i][j] + image2[i][j]) / 2;
     }
     Save_GS_Image();
 }
@@ -87,59 +106,49 @@ void GS_Merge(){
 void GS_Flip (){
     Open_GS_Image();
     int n;
-    cout << "\nTo Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
-    cin >> n;
-    if(n == 1){
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                new_image[i][j] = image[i][abs(SIZE-j)]; 
-                // convert the place of column 
+    cout << "\nTo Flip the Image Horizontally Enter (1), Vertically Enter (2) :\n";
+    n = ReadIntNumberBetween(1, 2);
+    switch(n){
+        case 1:
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) 
+                    new_image[i][j] = image[i][abs(SIZE-j)]; // convert the place of column 
             }
-        }
-    }
-    else{
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                new_image[i][j] = image[abs(SIZE-i)][j]; 
-                // convert the place of row 
+            break;
+        case 2:
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++)
+                    new_image[i][j] = image[abs(SIZE-i)][j]; // convert the place of row 
             }
-        }
     }
-
     Save_GS_Image();
 }
 
 // 5. Darken And Lighten Image :
 void GS_Darken_And_Lighten(){
     Open_GS_Image();
-    char Choice;
-    cout << "\nDo you want to (d)arken or (l)ighten ? \n";
-    cin >> Choice;
+    int Choice;
+    cout << "\nEnter (1) to darken the image, Enter (2) to lighten it :\n";
+    Choice = ReadIntNumberBetween(1, 2);
     for (int i = 0; i < SIZE; i++){
         for (int j = 0; j < SIZE; j++) {
-            if(Choice == 'd')
+            if(Choice == 1)
                 new_image[i][j] = image[i][j] * 0.5; // darken the image by 50%.
-            else if(Choice == 'l')
+            else if(Choice == 2)
                 new_image[i][j] = (255 + image[i][j]) / 2; // lighten the image by 50%.
         }
     }
     Save_GS_Image();
 }
 
-//6. Rotate Image :
+// 6. Rotate Image :
 void GS_Rotate(){
     Open_GS_Image();
     int rot_Choice = 1 ;
-    cout << "\n\tSelect 1 for 90 degree rotation\n"
-            "\tSelect 2 for 180 degree rotation\n"
-            "\tSelect 3 for 270 degree rotation\n";
-    cin >> rot_Choice;                         // user input of the rotation choice menu .
-
-    while (rot_Choice < 1 || rot_Choice > 3){
-
-        cout << "\nInvalid input, please re-enter a valid one :\n";
-        cin >> rot_Choice;            // if the user input not valid ;re-load rotation choice menu +.
-    }
+    cout << "\nEnter (1) for 90 degree rotation\n"
+            "Enter (2) for 180 degree rotation\n"
+            "Enter (3) for 270 degree rotation\n";
+    rot_Choice = ReadIntNumberBetween(1,3);
 
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -194,33 +203,20 @@ void GS_Enlarge(){
     short Quarter;
     cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
     cin >> Quarter;
-    for (int i = 0; i < SIZE / 2; i++){
-        for (int j = 0; j < SIZE / 2; j++) {
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++){
             switch(Quarter){
                 case 1:
-                    // every part of the new image takes 4 bits.
-                    new_image[i * 2][j * 2] = image[i][j]; 
-                    new_image[(i * 2) + 1][j * 2] = image[i][j];
-                    new_image[i * 2][(j * 2) + 1] = image[i][j];
-                    new_image[(i * 2) + 1][(j * 2) + 1] = image[i][j];
+                    new_image[i][j] = image[i / 2][j / 2]; // each pixel of the original image is divided to 4 pixels in the new image.
                     break;
                 case 2:
-                    new_image[i * 2][j * 2] = image[i][SIZE/2 + j]; // (size / 2 + j) to reach second quarter
-                    new_image[(i * 2) + 1][j * 2] = image[i][SIZE/2 + j];
-                    new_image[i * 2][(j * 2) + 1] = image[i][SIZE/2 + j];
-                    new_image[(i * 2) + 1][(j * 2) + 1] = image[i][SIZE/2 + j];
+                    new_image[i][j] = image[i / 2][(SIZE/2 + j / 2)]; // (size / 2 + j) to reach second quarter.
                     break;
                 case 3:
-                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][j]; // (size / 2 + i) to reach third quarter
-                    new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][j];
-                    new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][j];
-                    new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][j];
+                    new_image[i][j] = image[SIZE / 2 + i / 2][j / 2]; // (size / 2 + i) to reach third quarter.
                     break;
                 case 4:
-                    new_image[i * 2][j * 2] = image[SIZE / 2 + i][SIZE/2 + j]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter
-                    new_image[(i * 2) + 1][j * 2] = image[SIZE / 2 + i][SIZE/2 + j];
-                    new_image[i * 2][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
-                    new_image[(i * 2) + 1][(j * 2) + 1] = image[SIZE / 2 + i][SIZE/2 + j];
+                    new_image[i][j] = image[SIZE / 2 + i / 2][SIZE/2 + j / 2]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
                     break;
             }
         }
@@ -228,7 +224,7 @@ void GS_Enlarge(){
     Save_GS_Image();
 }
 
-//9.shrink image
+// 9.shrink image :
 void GS_Shrink () {
      Open_GS_Image();
      unsigned char image2[SIZE][SIZE];
@@ -389,7 +385,7 @@ void GS_Shuffle(){
     Save_GS_Image();
 }
 
-//c.blur image
+// c.blur image
 void GS_Blur () {
     Open_GS_Image();
     long long avg=0;   // declare a variable to store the sum .
