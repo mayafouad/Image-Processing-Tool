@@ -1,5 +1,9 @@
 /*
-    ------   CS213 - 2023 - Assignment 1 - Part 1 .    ------
+    ----- FCAI – OOP Programming – 2023 - Assignment 1 -----
+
+    Program Name : xxxxxx.cpp
+
+    Last Modification Date : 09/10/2023
 
     Maya Fouad Fathy    20220270    mayafouad2004@gmail.com
 
@@ -7,6 +11,7 @@
 
     Menna Abdelkarim    20210607    mannaabdelkarim@gmail.com
 
+    Purpose : Advancing Problem Solving Skills.
 */
 
 #include <bits/stdc++.h>
