@@ -1,7 +1,7 @@
 /*
     ----- FCAI – OOP Programming – 2023 - Assignment 1 -----
 
-    Program Name : xxxxxx.cpp
+    Program Name : Filters.cpp
 
     Last Modification Date : 09/10/2023
 
@@ -175,31 +175,31 @@ void GS_Rotate(){
     Save_GS_Image();
 }
 
-char Choice = '1';
+int Choice = 1;
 void DoProcess(){
     cout << "\nPlease select a filter to apply or 0 to exit : \n";
-    cin >> Choice;
+    Choice = ReadIntNumberBetween(0,6);
 
     switch(Choice){
-        case('1'):
+        case(1):
             GS_Black_White();
             break; 
-        case('2'):
+        case(2):
             GS_Invert();
             break;
-        case('3'):
+        case(3):
             GS_Merge();
             break;
-        case('4'):
+        case(4):
             GS_Flip();
             break;
-        case('5'):
+        case(5):
             GS_Darken_And_Lighten();
             break;
-        case('6'):
+        case(6):
             GS_Rotate();
             break;
-        case('0'):
+        case(0):
             break;
     }
 }
@@ -221,7 +221,7 @@ void view(){
 
 int main (){
 
-    while(Choice != '0')
+    while(Choice != 0)
         view (); 
        
 }
