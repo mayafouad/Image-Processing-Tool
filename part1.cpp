@@ -68,7 +68,6 @@ int ReadIntNumberBetween(int From, int To, string ErrorMessage = "\nInvalid Inpu
 
 // 1. Black and White Image :
 void GS_Black_White(){
-    Open_GS_Image();
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (image[i][j] > 127)
@@ -77,22 +76,26 @@ void GS_Black_White(){
                 new_image[i][j] = 0;    // convert the lower than the average to a black pixel  
         }
     }
-    Save_GS_Image();
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 // 2. Invert Image :
 void GS_Invert(){
-    Open_GS_Image();
     for (int i = 0; i < SIZE; i++){
         for (int j = 0; j < SIZE; j++)
             new_image[i][j] = 255 - image[i][j]; // turn every pixel to its opposite level of brightness
     }
-    Save_GS_Image();
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 // 3. Merge Images:
 void GS_Merge(){
-    Open_GS_Image();
     unsigned char image2[SIZE][SIZE];         // declare the images we need .
     char mergeImageFileName[100];            // load second Image.
     cout << "\nPlease enter name of image file to merge with :\n";
@@ -104,12 +107,15 @@ void GS_Merge(){
         for (int j = 0; j < SIZE; j++) 
             new_image[i][j] = (image[i][j] + image2[i][j]) / 2;
     }
-    Save_GS_Image();
+
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 // 4. Flip Image Horizontally and Vertically :
 void GS_Flip (){
-    Open_GS_Image();
     int n;
     cout << "\nTo Flip the Image Horizontally Enter (1), Vertically Enter (2) :\n";
     n = ReadIntNumberBetween(1, 2);
@@ -126,12 +132,15 @@ void GS_Flip (){
                     new_image[i][j] = image[abs(SIZE-i)][j]; // convert the place of row 
             }
     }
-    Save_GS_Image();
+
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 // 5. Darken And Lighten Image :
 void GS_Darken_And_Lighten(){
-    Open_GS_Image();
     int Choice;
     cout << "\nEnter (1) to darken the image, Enter (2) to lighten it :\n";
     Choice = ReadIntNumberBetween(1, 2);
@@ -143,12 +152,15 @@ void GS_Darken_And_Lighten(){
                 new_image[i][j] = (255 + image[i][j]) / 2; // lighten the image by 50%.
         }
     }
-    Save_GS_Image();
+
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 // 6. Rotate Image :
 void GS_Rotate(){
-    Open_GS_Image();
     int rot_Choice = 1 ;
     cout << "\nEnter (1) for 90 degree rotation\n"
             "Enter (2) for 180 degree rotation\n"
@@ -172,13 +184,16 @@ void GS_Rotate(){
             }
         }
     }
-    Save_GS_Image();
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
 }
 
 int Choice = 1;
 void DoProcess(){
     cout << "\nPlease select a filter to apply or 0 to exit : \n";
-    Choice = ReadIntNumberBetween(0,6);
+    Choice = ReadIntNumberBetween(0,7);
 
     switch(Choice){
         case(1):
@@ -199,6 +214,8 @@ void DoProcess(){
         case(6):
             GS_Rotate();
             break;
+        case(7):
+            Save_GS_Image();
         case(0):
             break;
     }
@@ -214,6 +231,7 @@ void view(){
     cout << "4- Flip Image\n";
     cout << "5- Darken and Lighten Image \n";
     cout << "6- Rotate Image\n";
+    cout << "7- Save the image to a file\n";
     cout << "0- Exit\n";
 
     DoProcess();
@@ -221,6 +239,7 @@ void view(){
 
 int main (){
 
+    Open_GS_Image();
     while(Choice != 0)
         view (); 
        
