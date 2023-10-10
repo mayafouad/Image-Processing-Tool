@@ -193,7 +193,7 @@ void GS_Rotate(){
 int Choice = 1;
 void DoProcess(){
     cout << "\nPlease select a filter to apply or 0 to exit : \n";
-    Choice = ReadIntNumberBetween(0,7);
+    Choice = ReadIntNumberBetween(0,8);
 
     switch(Choice){
         case(1):
@@ -216,6 +216,10 @@ void DoProcess(){
             break;
         case(7):
             Save_GS_Image();
+            break;
+        case(8):
+            Open_GS_Image();
+            break;
         case(0):
             break;
     }
@@ -224,7 +228,7 @@ void DoProcess(){
 // view all filters:
 void view(){
 
-    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n\n";  
+    cout << "\nThere Are Many Filters :\n\n";  
     cout << "1- Black & White Filter\n";
     cout << "2- Invert Filter\n";
     cout << "3- Merge Filter \n";
@@ -232,13 +236,15 @@ void view(){
     cout << "5- Darken and Lighten Image \n";
     cout << "6- Rotate Image\n";
     cout << "7- Save the image to a file\n";
+    cout << "8- Open Another image\n";
     cout << "0- Exit\n";
 
     DoProcess();
 }
 
 int main (){
-
+    
+    cout << "Welcome To Our Image Processing Tool.\n";
     Open_GS_Image();
     while(Choice != 0)
         view (); 
