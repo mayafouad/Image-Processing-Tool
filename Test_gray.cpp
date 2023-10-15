@@ -443,7 +443,7 @@ void GS_Crop(){
 }
 
 // 14. Skew image right :
-void GS_Skew(){
+void GS_Skew_Right(){
     cout << "\nPlease enter degree to skew right :\n";
     double degree; 
     degree  = ReadIntNumber();
@@ -503,7 +503,6 @@ void DoProcess(){
             break;
         case(9):
             GS_Shrink();
-            cout << 9;
             break;
         case(10):
             GS_Mirror();
@@ -518,7 +517,7 @@ void DoProcess(){
             GS_Crop();
             break;
         case(14):
-            GS_Skew();
+            GS_Skew_Right();
             break;
         case(15):
             cout << 15;
