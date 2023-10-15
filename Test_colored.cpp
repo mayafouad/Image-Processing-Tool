@@ -1,5 +1,9 @@
 /*
-    ------   CS213 - 2023 - Assignment 1 - Part 1 .    ------
+    ----- FCAI – OOP Programming – 2023 - Assignment 1 -----
+
+    Program Name : Filters.cpp
+
+    Last Modification Date : 09/10/2023
 
     Maya Fouad Fathy    20220270    mayafouad2004@gmail.com
 
@@ -7,6 +11,7 @@
 
     Menna Abdelkarim    20210607    mannaabdelkarim@gmail.com
 
+    Purpose : Image processing tool.
 */
 
 #include <bits/stdc++.h>
@@ -15,149 +20,379 @@ using namespace std;
 
 unsigned char c_image[SIZE][SIZE][RGB];
 unsigned char new_c_image[SIZE][SIZE][RGB];
+unsigned char new_image[SIZE][SIZE];
+
+void Save_GS_Image(){
+    char ImageFileName[100];
+    cout << "\nEnter The Target Image File Name\n"; // enter target file name
+    cin >> ImageFileName;
+    strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
+    writeGSBMP(ImageFileName, new_image);
+}
 
 void Open_RGB_Image(){
     char ImageFileName[100];
-    cout << "Enter The Source Image File Name\n";// enter target file name
+    cout << "\nEnter The Source Image File Name\n";// enter target file name
     cin >> ImageFileName;
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     readRGBBMP(ImageFileName, c_image);
 }
+
 void Save_RGB_Image(){
     char ImageFileName[100];
-    cout << "Enter The Target Image File Name\n"; // enter target file name
+    cout << "\nEnter The Target Image File Name\n"; // enter target file name
     cin >> ImageFileName;
     strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
     writeRGBBMP(ImageFileName, new_c_image);
 }
+
+bool IsNumberBetween(int Number, int From, int To){
+	if (Number >= From && Number <= To)
+		return true;
+	else
+		return false;
+}
+
+int ReadIntNumber(string ErrorMessage = "\nInvalid Input, Enter again :\n"){
+	int Number;
+	while (!(cin >> Number)){
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << ErrorMessage;
+	}
+	return Number;
+}
+
+int ReadIntNumberBetween(int From, int To, string ErrorMessage = "\nInvalid Input, Enter again :\n"){
+	int Number = ReadIntNumber();
+	while (!IsNumberBetween(Number, From, To)){
+		cout << ErrorMessage;
+		Number = ReadIntNumber();
+	}
+	return Number;
+}
+
 // RGB Filters----------------------------------
 
 // 1. Black and White Image :
 void RGB_Black_White(){
-    Open_RGB_Image();
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            int sum=0;
-            for(int k = 0; k < RGB; k++){
-               sum +=c_image[i][j][k];
-            }
-            if(sum/3 > 127){
-                new_image[i][j] = 255;}
-            else new_image[i][j] = 0;
-
+            int sum = 0;
+            for(int k = 0; k < RGB; k++)
+               sum += c_image[i][j][k];
+            if(sum / 3 > 127)
+                new_image[i][j] = 255;
+            else 
+                new_image[i][j] = 0;
         }
     }
     Save_GS_Image();
 }
 
+// 2. Invert Image :
+void RGB_Invert_Filter(){
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                new_c_image[i][j][k] = 255 - c_image[i][j][k];
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
 // 4. Flip Image Horizontally and Vertically :
 void RGB_Flip (){
-    Open_RGB_Image();
     cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
-    int n; cin >> n;
+    int n;
+    n = ReadIntNumberBetween(1,2);
     if(n == 1){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                for(int k = 0; k <RGB; k++){
-                new_c_image[i][j][k] = c_image[i][abs(SIZE-j)][k]; 
+                for(int k = 0; k <RGB; k++)
+                    new_c_image[i][j][k] = c_image[i][abs(SIZE-j)][k]; 
                 // convert the place of column 
-                }
+            }
         }
-    }
     }
     else{
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                for(int k = 0; k <RGB; k++){
-                new_c_image[i][j][k] = c_image[abs(SIZE-i)][j][k]; 
+                for(int k = 0; k <RGB; k++)
+                    new_c_image[i][j][k] = c_image[abs(SIZE-i)][j][k]; 
                 // convert the place of row 
-                }
+            }
         }
     }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
     }
-    Save_RGB_Image();
 }
+
+// 5. Darken And Lighten Image :
+void RGB_Darken_And_Lighten_Image(){
+    int Choice;
+    cout << "\nEnter (1) to darken the image, Enter (2) to lighten it :\n";
+    Choice = ReadIntNumberBetween(1, 2);
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++){
+                if(Choice == 1)
+                    new_c_image[i][j][k] = c_image[i][j][k] * 0.5; // darken the image by 50%
+                else if(Choice == 2)
+                    new_c_image[i][j][k] = (255 + c_image[i][j][k]) / 2; // lighten the image by 50%
+            }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
 // 7. Detect Image Edges :
 void RGB_Edges(){
-    Open_RGB_Image();
     // convert the image to Black and white 
     unsigned char new_image2[SIZE][SIZE]; 
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             int sum=0;
-            for(int k = 0; k < RGB; k++){
-               sum +=c_image[i][j][k];
-            }
-            if(sum/3 > 127){
-                new_image2[i][j] = 255;}
-            else new_image2[i][j] = 0;
-
+            for(int k = 0; k < RGB; k++)
+               sum += c_image[i][j][k];
+            if(sum/3 > 127)
+                new_image2[i][j] = 255;
+            else 
+                new_image2[i][j] = 0;
         }
     }
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if(new_image2[i][j] == 0 && new_image2[i-1][j] ==0  
             && new_image2[i+1][j] == 0 && new_image2[i][j-1] == 0 && new_image2[i][j+1] == 0){
-                new_image[i][j] = 255;}
-            else if(new_image2[i][j] == 0 ) new_image[i][j] = 0;
-            else new_image[i][j] = 255;
+                new_image[i][j] = 255;
+            }
+            else if(new_image2[i][j] == 0 ) 
+                new_image[i][j] = 0;
+            else 
+                new_image[i][j] = 255;
         }
     }
     Save_GS_Image();
 }
 
-char Choice = '1';
+// 8. Enlarge Image :
+void RGB_Enlarge(){
+    short Quarter;
+    cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
+    Quarter = ReadIntNumberBetween(1,4);
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++){
+            for(int k = 0; k < RGB; k++){
+                switch(Quarter){
+                    case 1:
+                        new_c_image[i][j][k] = c_image[i / 2][j / 2][k]; // each pixel of the original image is divided to 4 pixels in the new image.
+                        break;
+                    case 2:
+                        new_c_image[i][j][k] = c_image[i / 2][(SIZE/2 + j / 2)][k]; // (size / 2 + j) to reach second quarter.
+                        break;
+                    case 3:
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][j / 2][k]; // (size / 2 + i) to reach third quarter.
+                        break;
+                    case 4:
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][SIZE/2 + j / 2][k]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
+                        break;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            for(int k = 0; k < RGB; k++)
+            c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+// 11. Shuffle Image :
+void RGB_Shuffle(){
+    int arr[4];
+    cout << "\nNew order of quarters ? \n";
+    cin >> arr[0] >> arr[1] >> arr[2] >> arr[3];
+    for(int i = 0; i < SIZE / 2; i++){
+        for(int j = 0; j < SIZE / 2; j++){
+            for(int k = 0; k < RGB; k++){
+                switch(arr[0]){ // first quarter of the new image.
+                    case 1: // equal it with first quarter of the orignal image.
+                        new_c_image[i][j][k] = c_image[i][j][k]; 
+                        break;
+                    case 2: // equal it with second quarter of the orignal image.     
+                        new_c_image[i][j][k] = c_image[i][SIZE /2 + j][k];
+                        break;
+                    case 3: // equal it with third quarter of the orignal image.
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i][j][k];
+                        break;
+                    case 4: // equal it with fourth quarter of the orignal image.
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i][SIZE /2 + j][k];
+                        break;
+                }
+                switch(arr[1]){ // second quarter of the new image.
+                    case 1:
+                        new_c_image[i][SIZE / 2 + j][k] = c_image[i][j][k];
+                        break;
+                    case 2:                        
+                        new_c_image[i][SIZE / 2 + j][k] = c_image[i][SIZE /2 + j][k];
+                        break;
+                    case 3:
+                        new_c_image[i][SIZE / 2 + j][k] = c_image[SIZE / 2 + i][j][k];
+                        break;
+                    case 4:
+                        new_c_image[i][SIZE / 2 + j][k] = c_image[SIZE / 2 + i][SIZE /2 + j][k];
+                        break;
+                }
+                switch(arr[2]){ // third quarter of the new image.
+                    case 1:
+                        new_c_image[SIZE / 2 + i][j][k] = c_image[i][j][k];
+                        break;                    
+                    case 2:                        
+                        new_c_image[SIZE / 2 + i][j][k] = c_image[i][SIZE /2 + j][k];
+                        break;
+                    case 3:
+                        new_c_image[SIZE / 2 + i][j][k] = c_image[SIZE / 2 + i][j][k];
+                        break;
+                    case 4:
+                        new_c_image[SIZE / 2 + i][j][k] = c_image[SIZE / 2 + i][SIZE /2 + j][k];
+                        break;
+                }
+                switch(arr[3]){ // fourth quarter of the new image.
+                    case 1:
+                        new_c_image[SIZE / 2 + i][SIZE /2 + j][k] = c_image[i][j][k];
+                        break;                    
+                    case 2:                        
+                        new_c_image[SIZE / 2 + i][SIZE /2 + j][k] = c_image[i][SIZE /2 + j][k];
+                        break;
+                    case 3:
+                        new_c_image[SIZE / 2 + i][SIZE /2 + j][k] = c_image[SIZE / 2 + i][j][k];
+                        break;
+                    case 4:
+                        new_c_image[SIZE / 2 + i][SIZE /2 + j][k] = c_image[SIZE / 2 + i][SIZE /2 + j][k];
+                        break;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+// 14. Skew image right :
+void RGB_Skew_Right(){
+    cout << "\nPlease enter degree to skew right :\n";
+    double degree; 
+    cin >> degree;
+    degree = degree * M_PI / 180; // Turn angle to radian.
+    double start = tan(degree) * 256; // The point where the first column of the new image will start with.
+    double step = start / 256;        // A number that will be decreased from the start to skew the image.
+    unsigned char temp_image[SIZE][SIZE + (int) start][RGB]; 
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE + (int) start; j++){
+            for(int k = 0; k < RGB; k++)
+                temp_image[i][j][k] = 255; // fill the pixels with white.
+        }
+    }
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            for(int k = 0; k < RGB; k++)
+                temp_image[i][j + (int) start][k] = c_image[i][j][k]; 
+        } // fill the temp image with the pixels of the original image.
+        start -= step; // that will make the image reach last row.
+    }
+    start = tan(degree) * 256;
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE + (int) start; j++){
+            for(int k = 0; k < RGB; k++)
+            // filling the image with the pixels of the new image with making sure columns never exceed 255.
+            new_c_image[i][(j * 255)/(255 + (int)start)][k] = temp_image[i][j][k];
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            for(int k = 0; k < RGB; k++)
+            c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+int Choice = 1;
 void DoProcess(){
     cout << "\nPlease select a filter to apply or 0 to exit : \n";
-    cin >> Choice;
-
+    Choice = ReadIntNumberBetween(0,17);
     switch(Choice){
-        case('1'):
+        case(1):
             RGB_Black_White();
             break; 
-        case('2'):
-         //   GS_Invert();
+        case(2):
+            RGB_Invert_Filter();
             break;
-        case('3'):
-            //GS_Merge();
+        case(3):
+            //RGB_Merge();
             break;
-        case('4'):
+        case(4):
             RGB_Flip();
             break;
-        case('5'):
-       //     GS_Darken_And_Lighten();
+        case(5):
+            RGB_Darken_And_Lighten_Image();
             break;
-        case('6'):
-        //    GS_Rotate();
+        case(6):
+            //RGB_Rotate();
             break;
-        case('7'):
+        case(7):
             RGB_Edges();
             break;
-        case('8'):
-        //    GS_Enlarge();
+        case(8):
+            RGB_Enlarge();
             break;
-        case('9'):
-            cout << 9;
+        case(9):
+            //RGB_Shrink();
             break;
-        case('a'):
-          //  GS_Mirror();
+        case(10):
+            //RGB_Mirror();
             break;
-        case('b'):
-         //   GS_Shuffle();
+        case(11):
+            RGB_Shuffle();
             break;
-        case('c'):
-            cout << 12;
+        case(12):
+            //RGB_Blur();
             break;
-        case('d'):
-        //    GS_Crop();
+        case(13):
+            //RGB_Crop();
             break;
-        case('e'):
-            cout << 14;
+        case(14):
+            RGB_Skew_Right();
             break;
-        case('f'):
+        case(15):
             cout << 15;
             break;
-        case('0'):
+        case(16):
+            Save_RGB_Image();
+            break;
+        case(17):
+            Open_RGB_Image();
+            break;
+        case(0):
             break;
     }
 }
@@ -165,8 +400,7 @@ void DoProcess(){
 // view all filters:
 void view(){
 
-    cout << "\nWelcome To Our Image Processing Tool, There Are Many Filters :\n\n";  
-    cout << "1- Black & White Filter\n";
+    cout << "\n1- Black & White Filter\n";
     cout << "2- Invert Filter\n";
     cout << "3- Merge Filter \n";
     cout << "4- Flip Image\n";
@@ -175,20 +409,24 @@ void view(){
     cout << "7- Detect Image Edges \n";
     cout << "8- Enlarge Image\n";
     cout << "9- Shrink Image\n";
-    cout << "a- Mirror 1/2 Image\n";
-    cout << "b- Shuffle Image\n";
-    cout << "c- Blur Image\n";
-    cout << "d- Crop Image\n";
-    cout << "e- Skew Image Right  \n";
-    cout << "f- Skew Image Up  \n";
+    cout << "10- Mirror 1/2 Image\n";
+    cout << "11- Shuffle Image\n";
+    cout << "12- Blur Image\n";
+    cout << "13- Crop Image\n";
+    cout << "14- Skew Image Right  \n";
+    cout << "15- Skew Image Up  \n";
+    cout << "16- Save the image to a file\n";
+    cout << "17- Open Another image\n";
     cout << "0- Exit\n";
 
     DoProcess();
 }
 
 int main (){
-
-    while(Choice != '0')
+    
+    cout << "Welcome To Our Image Processing Tool.\n";
+    Open_RGB_Image();
+    while(Choice != 0)
         view (); 
-       
+
 }
