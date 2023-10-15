@@ -358,13 +358,15 @@ void RGB_Shuffle(){
 
 // 13. Crop Image :
 void RGB_Crop(){
-    cout << "Enter The Starting Position\n";
-    int x, y; cin >> x >> y;
-    cout << "Enter Width And Length\n";
-    int w, l; cin >> w >> l;
-    for(int i = 0; i < SIZE; i++){ //start row = y, end row = l+y. looping over l rows make the length.
+    cout << "\nEnter The Starting Position\n";
+    int x, y; 
+    x = ReadIntNumber(); y = ReadIntNumber();
+    cout << "\nEnter Width And Length\n";
+    int w, l; 
+    w = ReadIntNumber(); l = ReadIntNumber();
+    for(int i = 0; i < SIZE; i++){ 
         for(int j = 0; j < SIZE; j++){
-            for(int k = 0; k < RGB; k++){//start column = x, end column = x+w. looping over w columns make the width.
+            for(int k = 0; k < RGB; k++){
             new_c_image[i][j][k] = 255;}
         }
     }
