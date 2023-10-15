@@ -111,6 +111,32 @@ void RGB_Invert_Filter(){
     }
 }
 
+//3. merge images:
+void RGB_Merge(){
+    unsigned char image2[SIZE][SIZE][RGB];         // declare the images we need .
+    char mergeImageFileName[100];            // load second Image.
+    cout << "\nPlease enter name of image file to merge with :\n";
+    cin >> mergeImageFileName;
+    strcat (mergeImageFileName, ".bmp");     // add ".bmp" to second image .
+    readRGBBMP(mergeImageFileName, image2);  // and load it .
+
+    for (int i = 0; i < SIZE; i++) {         // merge two photos .
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; ++k) {
+                new_c_image[i][j][k] = (c_image[i][j][k] + image2[i][j][k]) / 2;
+            }
+        }
+    }
+
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; ++k) {
+                c_image[i][j][k] = new_c_image[i][j][k];
+            }
+        }
+    }
+}
+
 // 4. Flip Image Horizontally and Vertically :
 void RGB_Flip (){
     cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
@@ -161,6 +187,43 @@ void RGB_Darken_And_Lighten_Image(){
         for (int j = 0; j < SIZE; j++) {
             for(int k = 0; k < RGB; k++)
                 c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+// 6. Rotate Image :
+void RGB_Rotate(){
+    int rot_Choice = 1 ;
+    cout << "\nEnter (1) for 90 degree rotation\n"
+            "Enter (2) for 180 degree rotation\n"
+            "Enter (3) for 270 degree rotation\n";
+    rot_Choice = ReadIntNumberBetween(1,3);
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++){
+            for(int k = 0; k <RGB; ++k){
+
+                switch(rot_Choice) {
+                    case 1 :                          // 90 degree rotation .
+                        new_c_image[i][j][k] = c_image[SIZE - 1 - j][i][k];
+                        break;
+                    case 2 :                           // 180 degree rotation .
+                        new_c_image[i][j][k] =c_image[SIZE - 1 - i][SIZE - 1 - j][k];
+                        break ;
+                    case 3 :                          // 270 degree rotation .
+                        new_c_image[i][j][k] = c_image[j][SIZE - 1 - i][k];
+                        break;
+                    default :
+                        break;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; ++k){
+               c_image[i][j][k]= new_c_image[i][j][k];
+            }
         }
     }
 }
@@ -230,6 +293,58 @@ void RGB_Enlarge(){
         for(int j = 0; j < SIZE; j++){
             for(int k = 0; k < RGB; k++)
             c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+//9.shrink image
+void RGB_Shrink () {
+    unsigned char image2[SIZE][SIZE][RGB];
+    int choice;                    // read the user choice .
+    cout << "\tfor 1/2 shrink photo select 1: \n";
+    cout << "\tfor 1/3 shrink photo select 2:\n";
+    cout << "\tfor 1/4 shrink photo select 3: \n";
+    cin >> choice;
+    for (int i = 0; i < SIZE; ++i) {       //make all pixels in image2
+        for (int j = 0; j < SIZE; ++j) {    // array are white 255 .
+            for (int k = 0; k < RGB; ++k) {
+                image2[i][j][k] = 255;
+            }
+        }
+    }
+    if (choice == 1) {                   // 1/2 shrink photo .
+        for (int i = 0; i < SIZE; i += 2) {
+            for (int j = 0; j < SIZE; j += 2) {
+                for (int k = 0; k < RGB; ++k) {
+                    image2[i / 2][j / 2][k] = c_image[i][j][k];
+                }
+            }
+        }
+
+    } else if (choice == 2) {             // 1/3 shrink photo .
+        for (int i = 0; i < SIZE; i += 3) {
+            for (int j = 0; j < SIZE; j += 3) {
+                for (int k = 0; k < RGB; ++k) {
+                    image2[i / 3][j / 3][k] = c_image[i][j][k];
+                }
+            }
+        }
+
+    } else if (choice == 3) {            // 1/4 shrink photo .
+        for (int i = 0; i < SIZE; i += 4) {
+            for (int j = 0; j < SIZE; j += 4) {
+                for (int k = 0; k < RGB; ++k) {
+                    image2[i / 4][j / 4][k] =c_image[i][j][k];
+                }
+            }
+        }
+
+    }
+    for (int i = 0; i < SIZE; i++) {   //save the new photo.
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; ++k) {
+                new_c_image[i][j][k] = image2[i][j][k];
+            }
         }
     }
 }
@@ -356,6 +471,24 @@ void RGB_Shuffle(){
     }
 }
 
+//12. blur image:
+void RGB_Blur() {
+    long long avg=0;
+    for (int i = 0; i < SIZE; i++) {      //rows for loop.
+        for (int j = 0; j < SIZE; j++) {  // columns for loop .
+            for (int m=0;m<3;m++){
+                for (int k = i; k < i+7; k++) {
+                    for (int l = j; l < j+7; l++)  // iterate every 7*7 pixels .
+                        avg+=(c_image[k][l][m]);
+                }
+                avg=avg/49;      // calculate the average " sum /49" .
+               new_c_image[i][j][m]=avg;
+                avg=0;
+            }
+        }
+    }
+}
+
 // 13. Crop Image :
 void RGB_Crop(){
     cout << "\nEnter The Starting Position\n";
@@ -428,7 +561,7 @@ void DoProcess(){
             RGB_Invert_Filter();
             break;
         case(3):
-            //RGB_Merge();
+            RGB_Merge();
             break;
         case(4):
             RGB_Flip();
@@ -437,7 +570,7 @@ void DoProcess(){
             RGB_Darken_And_Lighten_Image();
             break;
         case(6):
-            //RGB_Rotate();
+            RGB_Rotate();
             break;
         case(7):
             RGB_Edges();
@@ -446,7 +579,7 @@ void DoProcess(){
             RGB_Enlarge();
             break;
         case(9):
-            //RGB_Shrink();
+           RGB_Shrink();
             break;
         case(10):
             //RGB_Mirror();
@@ -455,7 +588,7 @@ void DoProcess(){
             RGB_Shuffle();
             break;
         case(12):
-            //RGB_Blur();
+            RGB_Blur();
             break;
         case(13):
             //RGB_Crop();
