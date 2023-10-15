@@ -81,14 +81,19 @@ void RGB_Black_White(){
             int sum = 0;
             for(int k = 0; k < RGB; k++)
                sum += c_image[i][j][k];
-            if(sum / 3 > 127)
+            if((sum/3) > 127)
                 new_image[i][j] = 255;
             else 
                 new_image[i][j] = 0;
         }
     }
-    Save_GS_Image();
-}
+    for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for(int k = 0; k <RGB; k++){
+                    new_c_image[i][j][k]=new_image[i][j];
+                }
+            }
+    }
 
 // 2. Invert Image :
 void RGB_Invert_Filter(){
@@ -187,7 +192,13 @@ void RGB_Edges(){
                 new_image[i][j] = 255;
         }
     }
-    Save_GS_Image();
+    for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                for(int k = 0; k <RGB; k++){
+                    new_c_image[i][j][k]=new_image[i][j];
+                }
+            }
+    }
 }
 
 // 8. Enlarge Image :
@@ -219,6 +230,52 @@ void RGB_Enlarge(){
         for(int j = 0; j < SIZE; j++){
             for(int k = 0; k < RGB; k++)
             c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+// 10. Mirror :
+void RGB_Mirror(){
+    cout << "Enter The Number Of Part\n";
+    cout << "(1) Left\n";
+    cout << "(2) Right\n";
+    cout << "(3) Upper\n";
+    cout << "(4) Lower\n";
+    int n; cin >> n;
+    if(n == 1){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j <= SIZE/2; j++){
+                for(int k = 0; k < RGB; k++){ // loop over the left part 
+                new_c_image[i][j][k] = c_image[i][j][k]; 
+                new_c_image[i][SIZE-j][k] = c_image[i][j][k];} // make the most right = the left
+            }
+        }
+    }
+    else if(n == 2){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = SIZE/2; j < SIZE; j++){
+                for(int k = 0; k < RGB; k++){ // loop over the right part 
+                new_c_image[i][SIZE-j][k] = c_image[i][j][k]; // make  the left = the right 
+                new_c_image[i][j][k] = c_image[i][j][k];}
+            }
+        }
+    }
+    else if(n == 3){
+        for(int i = 0; i <= SIZE/2; i++){ // loop over the upper part 
+            for(int j = 0; j < SIZE; j++){
+                for(int k = 0; k < RGB; k++){
+                new_c_image[i][j][k] = c_image[i][j][k];
+                new_c_image[SIZE-i][j][k] = c_image[i][j][k];} // make the most down = the upper
+            }
+        }
+    }
+    else {
+        for(int i = SIZE/2; i < SIZE ; i++){ // loop over the lower part 
+            for(int j = 0; j < SIZE; j++){
+                for(int k = 0; k < RGB; k++){
+                new_c_image[SIZE-i][j][k] = c_image[i][j][k]; // make the upper = the dowen  
+                new_c_image[i][j][k] = c_image[i][j][k];}
+            }
         }
     }
 }
@@ -294,6 +351,26 @@ void RGB_Shuffle(){
         for (int j = 0; j < SIZE; j++) {
             for(int k = 0; k < RGB; k++)
                 c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
+
+// 13. Crop Image :
+void RGB_Crop(){
+    cout << "Enter The Starting Position\n";
+    int x, y; cin >> x >> y;
+    cout << "Enter Width And Length\n";
+    int w, l; cin >> w >> l;
+    for(int i = 0; i < SIZE; i++){ //start row = y, end row = l+y. looping over l rows make the length.
+        for(int j = 0; j < SIZE; j++){
+            for(int k = 0; k < RGB; k++){//start column = x, end column = x+w. looping over w columns make the width.
+            new_c_image[i][j][k] = 255;}
+        }
+    }
+    for(int i = y; i < y+l; i++){ //start row = y, end row = l+y. looping over l rows make the length.
+        for(int j = x; j < x+w; j++){
+            for(int k = 0; k < RGB; k++){//start column = x, end column = x+w. looping over w columns make the width.
+            new_c_image[i][j][k] = c_image[i][j][k];}
         }
     }
 }
