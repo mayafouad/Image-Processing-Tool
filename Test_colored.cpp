@@ -236,12 +236,13 @@ void RGB_Enlarge(){
 
 // 10. Mirror :
 void RGB_Mirror(){
-    cout << "Enter The Number Of Part\n";
+    cout << "\nEnter The Number Of Part\n";
     cout << "(1) Left\n";
     cout << "(2) Right\n";
     cout << "(3) Upper\n";
     cout << "(4) Lower\n";
-    int n; cin >> n;
+    int n;
+    n = ReadIntNumberBetween(1,4);
     if(n == 1){
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j <= SIZE/2; j++){
