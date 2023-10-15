@@ -582,7 +582,7 @@ void DoProcess(){
            RGB_Shrink();
             break;
         case(10):
-            //RGB_Mirror();
+            RGB_Mirror();
             break;
         case(11):
             RGB_Shuffle();
@@ -591,7 +591,7 @@ void DoProcess(){
             RGB_Blur();
             break;
         case(13):
-            //RGB_Crop();
+           RGB_Crop();
             break;
         case(14):
             RGB_Skew_Right();
