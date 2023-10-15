@@ -9,7 +9,7 @@
 
     Anas Abdelnasser    20220071    Elessilyanas@gmail.com
 
-    Menna Abdelkarim    20210607    mannaabdelkarim@gmail.com
+    Menna Abdelkarim    20210607    mannaabdelkarim0@gmail.com
 
     Purpose : Image processing tool.
 */
