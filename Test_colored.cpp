@@ -81,20 +81,17 @@ void RGB_Black_White(){
             int sum = 0;
             for(int k = 0; k < RGB; k++)
                sum += c_image[i][j][k];
-            if((sum/3) > 127)
+            if(sum / 3 > 127)
                 new_image[i][j] = 255;
             else 
                 new_image[i][j] = 0;
+            for(int k = 0; k <RGB; k++)
+                new_c_image[i][j][k]=new_image[i][j];
+                
         }
+    
     }
-    for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                for(int k = 0; k <RGB; k++){
-                    new_c_image[i][j][k]=new_image[i][j];
-                }
-            }
-    }
-
+}
 // 2. Invert Image :
 void RGB_Invert_Filter(){
     for (int i = 0; i < SIZE; i++){
