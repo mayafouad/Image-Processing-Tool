@@ -472,6 +472,35 @@ void GS_Skew_Right(){
     }
 }
 
+// 15. Skew image up :
+void GS_Skew_Up() {
+    cout << "Enter degree to skew up: \n";    //ask the user to enter the degree.
+    double degree;
+    cin >> degree;
+    degree = degree * M_PI / 180   // convert degrees to radians.
+    double start = tan(degree) * 256;
+    double step = tan(degree);
+    unsigned char temp_image[SIZE + (int) start][SIZE];
+    for (int i = 0; i < SIZE + (int) start; i++) {  //initialize the image with the white pixels 255.
+        for (int j = 0; j < SIZE; j++)
+            temp_image [i][j] = 255;
+    }
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++)
+            temp_image [j + (int) start][i] = image[j][i];
+        start -= step;  // decrease the _start_ value to skew the next row.
+    }
+    start = tan(degree) * 256;
+    for (int i = 0; i < SIZE + (int) start; i++) {
+        for (int j = 0; j < SIZE; j++)
+            new_image[(i * 255) / ((int) start + 255)][j] =temp_image[i][j];
+    }
+    for (int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++)
+            image[i][j] = new_image[i][j];
+    }
+}
+
 int Choice = 1;
 void DoProcess(){
     cout << "\nPlease select a filter to apply or 0 to exit : \n";
