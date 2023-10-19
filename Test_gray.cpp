@@ -220,23 +220,31 @@ void GS_Enlarge(){
     short Quarter;
     cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
     Quarter = ReadIntNumberBetween(1,4);
-    for (int i = 0; i < SIZE; i++){
-        for (int j = 0; j < SIZE; j++){
-            switch(Quarter){
-                case 1:
+    switch(Quarter){
+        case 1:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++)
                     new_image[i][j] = image[i / 2][j / 2]; // each pixel of the original image is divided to 4 pixels in the new image.
-                    break;
-                case 2:
-                    new_image[i][j] = image[i / 2][(SIZE/2 + j / 2)]; // (size / 2 + j) to reach second quarter.
-                    break;
-                case 3:
-                    new_image[i][j] = image[SIZE / 2 + i / 2][j / 2]; // (size / 2 + i) to reach third quarter.
-                    break;
-                case 4:
-                    new_image[i][j] = image[SIZE / 2 + i / 2][SIZE/2 + j / 2]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
-                    break;
             }
-        }
+            break;
+        case 2:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++)
+                    new_image[i][j] = image[i / 2][(SIZE/2 + j / 2)]; // (size / 2 + j) to reach second quarter.
+            }
+            break;
+        case 3:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++)
+                    new_image[i][j] = image[SIZE / 2 + i / 2][j / 2]; // (size / 2 + i) to reach third quarter.
+            }
+            break;
+        case 4:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++)
+                    new_image[i][j] = image[SIZE / 2 + i / 2][SIZE/2 + j / 2]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
+            }
+            break;
     }
     for (int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++)
@@ -474,7 +482,7 @@ void GS_Skew_Right(){
 
 // 15. Skew image up :
 void GS_Skew_Up() {
-    cout << "Enter degree to skew up: \n";    //ask the user to enter the degree.
+    cout << "\nEnter degree to skew up: \n";    //ask the user to enter the degree.
     double degree;
     cin >> degree;
     degree = degree * M_PI / 180;   // convert degrees to radians.
@@ -565,15 +573,15 @@ void DoProcess(){
 // view all filters:
 void view(){
 
-    cout << "\n1- Black & White Filter\n";
-    cout << "2- Invert Filter\n";
-    cout << "3- Merge Filter \n";
-    cout << "4- Flip Image\n";
-    cout << "5- Darken and Lighten Image \n";
-    cout << "6- Rotate Image\n";
-    cout << "7- Detect Image Edges \n";
-    cout << "8- Enlarge Image\n";
-    cout << "9- Shrink Image\n";
+    cout << "\n1 - Black & White Filter\n";
+    cout << "2 - Invert Filter\n";
+    cout << "3 - Merge Filter \n";
+    cout << "4 - Flip Image\n";
+    cout << "5 - Darken and Lighten Image \n";
+    cout << "6 - Rotate Image\n";
+    cout << "7 - Detect Image Edges \n";
+    cout << "8 - Enlarge Image\n";
+    cout << "9 - Shrink Image\n";
     cout << "10- Mirror 1/2 Image\n";
     cout << "11- Shuffle Image\n";
     cout << "12- Blur Image\n";
@@ -582,7 +590,7 @@ void view(){
     cout << "15- Skew Image Up  \n";
     cout << "16- Save the image to a file\n";
     cout << "17- Open Another image\n";
-    cout << "0- Exit\n";
+    cout << "0 - Exit\n";
 
     DoProcess();
 }
