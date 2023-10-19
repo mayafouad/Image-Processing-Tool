@@ -22,14 +22,6 @@ unsigned char c_image[SIZE][SIZE][RGB];
 unsigned char new_c_image[SIZE][SIZE][RGB];
 unsigned char new_image[SIZE][SIZE];
 
-void Save_GS_Image(){
-    char ImageFileName[100];
-    cout << "\nEnter The Target Image File Name\n"; // enter target file name
-    cin >> ImageFileName;
-    strcat(ImageFileName, ".bmp");// add to it .bmp extension and load image
-    writeGSBMP(ImageFileName, new_image);
-}
-
 void Open_RGB_Image(){
     char ImageFileName[100];
     cout << "\nEnter The Source Image File Name\n";// enter target file name
@@ -85,13 +77,18 @@ void RGB_Black_White(){
                 new_image[i][j] = 255;
             else 
                 new_image[i][j] = 0;
-            for(int k = 0; k <RGB; k++)
-                new_c_image[i][j][k]=new_image[i][j];
-                
+            for(int k = 0; k < RGB; k++)
+                new_c_image[i][j][k] = new_image[i][j];
         }
-    
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
     }
 }
+
 // 2. Invert Image :
 void RGB_Invert_Filter(){
     for (int i = 0; i < SIZE; i++){
@@ -136,7 +133,7 @@ void RGB_Merge(){
 
 // 4. Flip Image Horizontally and Vertically :
 void RGB_Flip (){
-    cout << "To Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
+    cout << "\nTo Flip the Image Horizontally Enter (1), Vertically Enter (2) \n";
     int n;
     n = ReadIntNumberBetween(1,2);
     if(n == 1){
@@ -253,11 +250,16 @@ void RGB_Edges(){
         }
     }
     for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                for(int k = 0; k <RGB; k++){
-                    new_c_image[i][j][k]=new_image[i][j];
-                }
-            }
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k <RGB; k++)
+                new_c_image[i][j][k] = new_image[i][j];
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
     }
 }
 
@@ -266,25 +268,39 @@ void RGB_Enlarge(){
     short Quarter;
     cout << "\nWhich quarter to enlarge 1, 2, 3 or 4 ? \n";
     Quarter = ReadIntNumberBetween(1,4);
-    for (int i = 0; i < SIZE; i++){
-        for (int j = 0; j < SIZE; j++){
-            for(int k = 0; k < RGB; k++){
-                switch(Quarter){
-                    case 1:
+    switch(Quarter){
+        case 1:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++){
+                    for(int k = 0; k < RGB; k++)
                         new_c_image[i][j][k] = c_image[i / 2][j / 2][k]; // each pixel of the original image is divided to 4 pixels in the new image.
-                        break;
-                    case 2:
-                        new_c_image[i][j][k] = c_image[i / 2][(SIZE/2 + j / 2)][k]; // (size / 2 + j) to reach second quarter.
-                        break;
-                    case 3:
-                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][j / 2][k]; // (size / 2 + i) to reach third quarter.
-                        break;
-                    case 4:
-                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][SIZE/2 + j / 2][k]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
-                        break;
                 }
             }
-        }
+            break;
+        case 2:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++){
+                    for(int k = 0; k < RGB; k++)
+                        new_c_image[i][j][k] = c_image[i / 2][(SIZE/2 + j / 2)][k]; // (size / 2 + j) to reach second quarter.
+                    }
+                }
+            break;
+        case 3:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++){
+                    for(int k = 0; k < RGB; k++)
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][j / 2][k]; // (size / 2 + i) to reach third quarter.
+                    }
+                }
+            break;
+        case 4:
+            for (int i = 0; i < SIZE; i++){
+                for (int j = 0; j < SIZE; j++){
+                    for(int k = 0; k < RGB; k++)
+                        new_c_image[i][j][k] = c_image[SIZE / 2 + i / 2][SIZE/2 + j / 2][k]; // (size / 2 + i) and (size / 2 + j) to reach fourth quarter.
+                    }
+                }
+            break;
     }
     for (int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
@@ -296,43 +312,38 @@ void RGB_Enlarge(){
 
 //9.shrink image
 void RGB_Shrink () {
-    unsigned char image2[SIZE][SIZE][RGB];
     int choice;                    // read the user choice .
-    cout << "\tfor 1/2 shrink photo select 1: \n";
-    cout << "\tfor 1/3 shrink photo select 2:\n";
-    cout << "\tfor 1/4 shrink photo select 3: \n";
+    cout << "\nfor 1/2 shrink photo select 1: \n";
+    cout << "for 1/3 shrink photo select 2:\n";
+    cout << "for 1/4 shrink photo select 3: \n";
     cin >> choice;
     for (int i = 0; i < SIZE; ++i) {       //make all pixels in image2
         for (int j = 0; j < SIZE; ++j) {    // array are white 255 .
-            for (int k = 0; k < RGB; ++k) {
-                image2[i][j][k] = 255;
-            }
+            for (int k = 0; k < RGB; ++k) 
+                new_c_image[i][j][k] = 255;
         }
     }
     if (choice == 1) {                   // 1/2 shrink photo .
         for (int i = 0; i < SIZE; i += 2) {
             for (int j = 0; j < SIZE; j += 2) {
-                for (int k = 0; k < RGB; ++k) {
-                    image2[i / 2][j / 2][k] = c_image[i][j][k];
-                }
+                for (int k = 0; k < RGB; ++k) 
+                    new_c_image[i / 2][j / 2][k] = c_image[i][j][k];
             }
         }
 
     } else if (choice == 2) {             // 1/3 shrink photo .
         for (int i = 0; i < SIZE; i += 3) {
             for (int j = 0; j < SIZE; j += 3) {
-                for (int k = 0; k < RGB; ++k) {
-                    image2[i / 3][j / 3][k] = c_image[i][j][k];
-                }
+                for (int k = 0; k < RGB; ++k)
+                    new_c_image[i / 3][j / 3][k] = c_image[i][j][k];
             }
         }
 
     } else if (choice == 3) {            // 1/4 shrink photo .
         for (int i = 0; i < SIZE; i += 4) {
             for (int j = 0; j < SIZE; j += 4) {
-                for (int k = 0; k < RGB; ++k) {
-                    image2[i / 4][j / 4][k] =c_image[i][j][k];
-                }
+                for (int k = 0; k < RGB; ++k) 
+                    new_c_image[i / 4][j / 4][k] = c_image[i][j][k];
             }
         }
 
@@ -340,7 +351,7 @@ void RGB_Shrink () {
     for (int i = 0; i < SIZE; i++) {   //save the new photo.
         for (int j = 0; j < SIZE; j++) {
             for (int k = 0; k < RGB; ++k) {
-                new_c_image[i][j][k] = image2[i][j][k];
+                c_image[i][j][k] = new_c_image[i][j][k];
             }
         }
     }
@@ -359,8 +370,8 @@ void RGB_Mirror(){
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j <= SIZE/2; j++){
                 for(int k = 0; k < RGB; k++){ // loop over the left part 
-                new_c_image[i][j][k] = c_image[i][j][k]; 
-                new_c_image[i][SIZE-j][k] = c_image[i][j][k];} // make the most right = the left
+                    new_c_image[i][j][k] = c_image[i][j][k]; 
+                    new_c_image[i][SIZE-j][k] = c_image[i][j][k];} // make the most right = the left
             }
         }
     }
@@ -368,8 +379,8 @@ void RGB_Mirror(){
         for(int i = 0; i < SIZE; i++){
             for(int j = SIZE/2; j < SIZE; j++){
                 for(int k = 0; k < RGB; k++){ // loop over the right part 
-                new_c_image[i][SIZE-j][k] = c_image[i][j][k]; // make  the left = the right 
-                new_c_image[i][j][k] = c_image[i][j][k];}
+                    new_c_image[i][SIZE-j][k] = c_image[i][j][k]; // make  the left = the right 
+                    new_c_image[i][j][k] = c_image[i][j][k];}
             }
         }
     }
@@ -377,8 +388,8 @@ void RGB_Mirror(){
         for(int i = 0; i <= SIZE/2; i++){ // loop over the upper part 
             for(int j = 0; j < SIZE; j++){
                 for(int k = 0; k < RGB; k++){
-                new_c_image[i][j][k] = c_image[i][j][k];
-                new_c_image[SIZE-i][j][k] = c_image[i][j][k];} // make the most down = the upper
+                    new_c_image[i][j][k] = c_image[i][j][k];
+                    new_c_image[SIZE-i][j][k] = c_image[i][j][k];} // make the most down = the upper
             }
         }
     }
@@ -386,9 +397,15 @@ void RGB_Mirror(){
         for(int i = SIZE/2; i < SIZE ; i++){ // loop over the lower part 
             for(int j = 0; j < SIZE; j++){
                 for(int k = 0; k < RGB; k++){
-                new_c_image[SIZE-i][j][k] = c_image[i][j][k]; // make the upper = the dowen  
-                new_c_image[i][j][k] = c_image[i][j][k];}
+                    new_c_image[SIZE-i][j][k] = c_image[i][j][k]; // make the upper = the dowen  
+                    new_c_image[i][j][k] = c_image[i][j][k];}
             }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
         }
     }
 }
@@ -473,7 +490,7 @@ void RGB_Blur() {
     long long avg=0;
     for (int i = 0; i < SIZE; i++) {      //rows for loop.
         for (int j = 0; j < SIZE; j++) {  // columns for loop .
-            for (int m=0;m<3;m++){
+            for (int m = 0;m < 3; m++){
                 for (int k = i; k < i+7; k++) {
                     for (int l = j; l < j+7; l++)  // iterate every 7*7 pixels .
                         avg+=(c_image[k][l][m]);
@@ -482,6 +499,12 @@ void RGB_Blur() {
                new_c_image[i][j][m]=avg;
                 avg=0;
             }
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
         }
     }
 }
@@ -496,14 +519,20 @@ void RGB_Crop(){
     w = ReadIntNumber(); l = ReadIntNumber();
     for(int i = 0; i < SIZE; i++){ 
         for(int j = 0; j < SIZE; j++){
-            for(int k = 0; k < RGB; k++){
-            new_c_image[i][j][k] = 255;}
+            for(int k = 0; k < RGB; k++)
+                new_c_image[i][j][k] = 255;
         }
     }
     for(int i = y; i < y+l; i++){ //start row = y, end row = l+y. looping over l rows make the length.
         for(int j = x; j < x+w; j++){
-            for(int k = 0; k < RGB; k++){//start column = x, end column = x+w. looping over w columns make the width.
-            new_c_image[i][j][k] = c_image[i][j][k];}
+            for(int k = 0; k < RGB; k++) //start column = x, end column = x+w. looping over w columns make the width.
+                new_c_image[i][j][k] = c_image[i][j][k];
+        }
+    }
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++) {
+            for(int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
         }
     }
 }
@@ -541,46 +570,47 @@ void RGB_Skew_Right(){
     for (int i = 0; i < SIZE; i++){
         for(int j = 0; j < SIZE; j++){
             for(int k = 0; k < RGB; k++)
-            c_image[i][j][k] = new_c_image[i][j][k];
+                c_image[i][j][k] = new_c_image[i][j][k];
         }
     }
 }
 
 // 15. Skew image up :
-    void RGB_Skew_Up() {
-        cout << "Enter degree to skew up: \n";    //ask the user to enter the degree.
-        double degree;
-        cin >> degree;
-        degree = degree * M_PI / 180;   // convert degrees to radians.
-        double start = tan(degree) * 256;
-        double step = tan(degree);
-        unsigned char temp_image[SIZE + (int) start][SIZE][RGB];
-        for (int i = 0; i < SIZE + (int) start; i++) {  //initialize the image with the white pixels 255.
-            for (int j = 0; j < SIZE; j++) {
-                for (int k = 0; k < RGB; k++)
-            }         temp_image[i][j][k] = 255;
-        }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                for (int k = 0; k < RGB; k++)
-                    temp_image[j + (int) start][i][k] = image[j][i][k];
-            }
-            start -= step;  // decrease the _start_ value to skew the next row.
-        }
-        start = tan(degree) * 256;
-        for (int i = 0; i < SIZE + (int) start; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                for (int k = 0; k < RGB; k++)
-                    new_c_image[(i * 255) / ((int) start + 255)][j][k] =temp_image[i][j][k];
-            }
-        }
-        for(int i = 0; i < SIZE; i++){
-            for (int j = 0; j < SIZE; j++){
-                for (int k = 0; k < RGB; k++){
-                    c_image[i][j][k] = new_c_image[i][j][k];
-            }
+void RGB_Skew_Up() {
+    cout << "\nEnter degree to skew up: \n";    //ask the user to enter the degree.
+    double degree;
+    cin >> degree;
+    degree = degree * M_PI / 180;   // convert degrees to radians.
+    double start = tan(degree) * 256;
+    double step = tan(degree);
+    unsigned char temp_image[SIZE + (int) start][SIZE][RGB];
+    for (int i = 0; i < SIZE + (int) start; i++) {  //initialize the image with the white pixels 255.
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++)
+                temp_image[i][j][k] = 255;
         }
     }
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++)
+                temp_image[j + (int) start][i][k] = c_image[j][i][k];
+        }
+        start -= step;  // decrease the _start_ value to skew the next row.
+    }
+    start = tan(degree) * 256;
+    for (int i = 0; i < SIZE + (int) start; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++)
+                new_c_image[(i * 255) / ((int) start + 255)][j][k] = temp_image[i][j][k];
+        }
+    }
+    for(int i = 0; i < SIZE; i++){
+        for (int j = 0; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++)
+                c_image[i][j][k] = new_c_image[i][j][k];
+        }
+    }
+}
 
 int Choice = 1;
 void DoProcess(){
@@ -630,8 +660,8 @@ void DoProcess(){
             RGB_Skew_Right();
             break;
         case(15):
-	   RGB_Skew_Up();
-	   break;
+	        RGB_Skew_Up();
+	        break;
         case(16):
             Save_RGB_Image();
             break;
@@ -646,15 +676,15 @@ void DoProcess(){
 // view all filters:
 void view(){
 
-    cout << "\n1- Black & White Filter\n";
-    cout << "2- Invert Filter\n";
-    cout << "3- Merge Filter \n";
-    cout << "4- Flip Image\n";
-    cout << "5- Darken and Lighten Image \n";
-    cout << "6- Rotate Image\n";
-    cout << "7- Detect Image Edges \n";
-    cout << "8- Enlarge Image\n";
-    cout << "9- Shrink Image\n";
+    cout << "\n1 - Black & White Filter\n";
+    cout << "2 - Invert Filter\n";
+    cout << "3 - Merge Filter \n";
+    cout << "4 - Flip Image\n";
+    cout << "5 - Darken and Lighten Image \n";
+    cout << "6 - Rotate Image\n";
+    cout << "7 - Detect Image Edges \n";
+    cout << "8 - Enlarge Image\n";
+    cout << "9 - Shrink Image\n";
     cout << "10- Mirror 1/2 Image\n";
     cout << "11- Shuffle Image\n";
     cout << "12- Blur Image\n";
@@ -663,7 +693,7 @@ void view(){
     cout << "15- Skew Image Up  \n";
     cout << "16- Save the image to a file\n";
     cout << "17- Open Another image\n";
-    cout << "0- Exit\n";
+    cout << "0 - Exit\n";
 
     DoProcess();
 }
@@ -673,6 +703,6 @@ int main (){
     cout << "Welcome To Our Image Processing Tool.\n";
     Open_RGB_Image();
     while(Choice != 0)
-        view (); 
+        view ();
 
 }
