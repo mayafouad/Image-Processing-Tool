@@ -477,7 +477,7 @@ void GS_Skew_Up() {
     cout << "Enter degree to skew up: \n";    //ask the user to enter the degree.
     double degree;
     cin >> degree;
-    degree = degree * M_PI / 180   // convert degrees to radians.
+    degree = degree * M_PI / 180;   // convert degrees to radians.
     double start = tan(degree) * 256;
     double step = tan(degree);
     unsigned char temp_image[SIZE + (int) start][SIZE];
