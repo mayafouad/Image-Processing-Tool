@@ -630,9 +630,8 @@ void DoProcess(){
             RGB_Skew_Right();
             break;
         case(15):
-		RGB_Skew_Up();
-            cout << 15;
-            break;
+	   RGB_Skew_Up();
+	   break;
         case(16):
             Save_RGB_Image();
             break;
