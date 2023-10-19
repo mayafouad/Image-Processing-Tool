@@ -549,7 +549,7 @@ void DoProcess(){
             GS_Skew_Right();
             break;
         case(15):
-            cout << 15;
+            GS_Skew_Up();
             break;
         case(16):
             Save_GS_Image();
